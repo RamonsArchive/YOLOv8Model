@@ -1,0 +1,13 @@
+names:
+  0: water_bottle
+  1: mouse
+  2: airpod_case
+  3: mechanical_pencil
+  4: keys
+  5: guitar_pick
+  6: keyboard
+  7: monitor
+  8: laptop
+path: /Users/ramonm.m/Desktop/Year 2/Projects/VideoDetectionAI/YOLOv8Model/dataset
+train: images/train
+val: images/val

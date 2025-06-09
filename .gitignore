@@ -1,0 +1,15 @@
+# ignore virtualenv & heavy binaries
+.venv/
+*.pt
+*.mp4
+*.jpg
+*.png
+*.jpeg
+*.json  
+*.cache
+*.txt
+runs/
+results/
+assets/trainingVideos/**.pyc
+*.pyc
+echo "__pycache__/" >> .gitignore
