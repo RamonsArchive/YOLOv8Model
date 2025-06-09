@@ -13,8 +13,8 @@ yolov8*.pt
 runs/train/*/weights/*.pt
 
 # Large video files - be specific
-assets/testVideo/*.mp4
-results/detection/*.mp4
+#assets/testVideo/*.mp4
+#results/detection/*.mp4
 
 # OS files
 .DS_Store
