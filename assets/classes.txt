@@ -1,0 +1,10 @@
+water_bottle
+mouse
+airpod_case
+mechanical_pencil
+keys
+guitar_pick
+keyboard
+monitor
+laptop
+

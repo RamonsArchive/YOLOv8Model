@@ -1,15 +1,26 @@
-# ignore virtualenv & heavy binaries
+# Virtual environments
 .venv/
-*.pt
-*.mp4
-*.jpg
-*.png
-*.jpeg
-*.json  
-*.cache
-*.txt
-runs/
-results/
-assets/trainingVideos/**.pyc
+venv/
+env/
+
+# Python cache
+__pycache__/
 *.pyc
-echo "__pycache__/" >> .gitignore
+*.pyo
+
+# Model files - only exclude large model files
+yolov8*.pt
+runs/train/*/weights/*.pt
+
+# Large video files - be specific
+assets/testVideo/*.mp4
+results/detection/*.mp4
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+
+# Don't ignore dataset files that are part of your project!
+# Keep: *.jpg, *.txt, *.json (these are your dataset)
+EOF
