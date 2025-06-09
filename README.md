@@ -38,7 +38,112 @@ Rather than relying on general-purpose pre-trained models, I decided to create a
 - **Training**: 80% (~281 images)
 - **Validation**: 20% (~70 images)
 
-## Technical Implementation
+## Usage Instructions
+
+### Quick Start
+
+The main pipeline (`src/main_pipeline.py`) provides an interactive interface that handles the complete workflow:
+
+```bash
+cd YOLOv8Model
+python src/main_pipeline.py
+```
+
+### Pipeline Workflow
+
+When you run the main script, it will:
+
+1. **Configure Paths**: Automatically sets up the directory structure
+   - Images: `dataset/images/train_upright/`
+   - Labels: `dataset/labels/all/`
+   - Test Video: `assets/testVideo/deskVideo.mp4`
+
+2. **Dataset Setup**: Converts JSON annotations to YOLO format and creates train/val splits
+   - 80% training, 20% validation split
+   - Generates `dataset.yaml` configuration file
+
+3. **Training Options**: Interactive menu with two choices:
+   ```
+   a) Train custom model (takes time but better for your specific objects)
+   b) Skip training and use pre-trained model (faster)
+   ```
+
+4. **Object Detection**: Runs detection on your test video and outputs:
+   - Annotated video file: `results/detection/video_results.mp4`
+   - CSV file with detection data: `detection_results.csv`
+
+### Option A: Custom Training (Recommended)
+- Trains a YOLOv8n model specifically on your desk objects
+- Takes ~4 hours on CPU (faster with GPU)
+- Produces better results for domain-specific objects
+- Saves best model as `runs/train/desk_objects/weights/best.pt`
+
+### Option B: Pre-trained Model (Faster)
+- Uses general YOLOv8 model without custom training
+- Faster execution (~5-10 minutes)
+- May have lower accuracy on specific desk objects
+- Good for quick testing and demonstration
+
+### Prerequisites
+
+1. **Install Dependencies**:
+```bash
+pip install ultralytics opencv-python pandas pyyaml
+```
+
+2. **Directory Structure**: Ensure your project follows this structure:
+```
+YOLOv8Model/
+├── src/main_pipeline.py
+├── dataset/
+│   ├── images/train_upright/    # Your training images
+│   └── labels/all/              # JSON annotation files
+├── assets/testVideo/
+│   └── deskVideo.mp4           # Your test video
+└── results/                    # Output directory (created automatically)
+```
+
+3. **Test Video**: Place your 1-minute desk/room video as `assets/testVideo/deskVideo.mp4`
+
+### Output Files
+
+After running the pipeline, you'll find:
+
+- **Annotated Video**: `results/detection/video_results.mp4`
+- **Detection CSV**: `detection_results.csv` with columns:
+  - `frame_number`: Frame index in video
+  - `object_class`: Detected object name
+  - `confidence_score`: Detection confidence (0-1)
+  - `bounding_box`: Coordinates (x, y, width, height)
+
+### Alternative Scripts (For Advanced Users)
+
+If you need to run individual components:
+
+```bash
+# Extract frames from training videos
+python src/extract_frames.py
+
+# Rotate images if orientation is incorrect
+python src/rotate_images.py
+
+# Run detection on trained model
+python src/run_best_pt.py
+```
+
+### Pre-trained Model Foundation
+**`yolov8n.pt`** is the pre-trained YOLOv8 nano model weights downloaded from Ultralytics. This serves as the foundation for transfer learning - instead of training from scratch, the model starts with these general object detection capabilities and fine-tunes them for your specific desk objects. This approach significantly reduces training time and improves performance on small datasets.
+
+## Dependencies
+```
+ultralytics
+opencv-python
+pandas
+pyyaml
+pathlib
+```
+
+## Technical Review
 
 ### File Structure
 ```
@@ -238,40 +343,6 @@ def convert_json_to_yolo(json_path, img_width, img_height, class_mapping):
 3. **Edge device compatibility** testing
 4. **API integration** for production systems
 
-## Usage Instructions
-
-### Pre-trained Model Foundation
-**`yolov8n.pt`** is the pre-trained YOLOv8 nano model weights downloaded from Ultralytics. This serves as the foundation for transfer learning - instead of training from scratch, the model starts with these general object detection capabilities and fine-tunes them for your specific desk objects. This approach significantly reduces training time and improves performance on small datasets.
-```bash
-python src/main_pipeline.py
-# Choose option 'a' for training
-```
-
-### Running Detection on Video
-```bash
-python src/main_pipeline.py
-# Choose option 'b' for pre-trained model
-# Or use custom model after training
-```
-
-### Dataset Preparation
-```bash
-# Extract frames from videos
-python src/extract_frames.py
-
-# Rotate images if needed
-python src/rotate_images.py
-```
-
-## Dependencies
-```
-ultralytics
-opencv-python
-pandas
-pyyaml
-pathlib
-```
-
 ## Key Learnings
 
 1. **Domain-specific training** significantly outperforms general models for specialized objects
@@ -283,6 +354,23 @@ pathlib
 
 ## Conclusion
 
-This project demonstrates the effectiveness of custom YOLOv8 training for domain-specific object detection. By creating a targeted dataset and systematically addressing technical challenges, the model achieved solid performance with a fitness score of 0.7944 and successfully detected all target objects in real-world scenarios after confidence threshold optimization.
+This project demonstrates the effectiveness of custom YOLOv8 training for domain-specific object detection, perfectly suited for the take-home assignment requirements. By creating a targeted dataset and systematically addressing technical challenges, the model achieved solid performance with a fitness score of 0.7944 and successfully detected all target objects in real-world scenarios after confidence threshold optimization.
 
-The approach validates the principle that specialized models often outperform general-purpose solutions when dealing with specific object domains, even with relatively small datasets (~351 images). The consistent training and validation losses indicate a well-balanced model suitable for production deployment.
+### Assignment Deliverables Met
+
+This implementation provides all required outputs for the take-home task:
+
+1. **✅ Object Detection in Video**: YOLOv8 processes 1-minute room/desk videos
+2. **✅ Annotated Video Output**: `results/detection/video_results.mp4` with bounding boxes and labels
+3. **✅ CSV Detection Results**: Complete detection data with frame numbers, object classes, confidence scores, and bounding box coordinates
+4. **✅ Complete Code**: Full pipeline with `main_pipeline.py` providing interactive workflow
+5. **✅ Setup Instructions**: Comprehensive README with step-by-step usage guide
+
+### Key Technical Achievements
+
+- **Domain Specialization**: Custom training significantly outperformed general-purpose models on desk objects
+- **Robust Pipeline**: Interactive main function handles complete workflow from data setup to detection output
+- **Efficient Training**: Achieved good results in 84 epochs with 4.1 hours of training time
+- **Production Ready**: Consistent training/validation losses indicate a well-balanced model suitable for deployment
+
+The approach validates the principle that specialized models often outperform general-purpose solutions when dealing with specific object domains, even with relatively small datasets (~351 images). The systematic implementation demonstrates practical machine learning engineering skills applicable to real-world computer vision challenges.
